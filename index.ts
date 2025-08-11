@@ -1,81 +1,87 @@
-abstract class CourseSubscription{
-    abstract getCost(): number;
-    abstract getFeatures(): string[];
-
+interface IBooking{
+    book(): string
+}
+interface IItinerary{
+    display(): string
+}
+interface IInvoice{
+    generate(): string;
 }
 
-class BasicSubscription extends CourseSubscription{
-    getCost(): number {
-        return 499
-    }
-    getFeatures(): string[] {
-        return ["Access to all basic courses"]
+class FlightBooking implements IBooking{
+    book(): string{
+        return "Flight booked with Indigo.."
     }
 }
-abstract class SubscriptionDecorate extends CourseSubscription{
-    protected subscription: CourseSubscription;
-    constructor(subscription: CourseSubscription){
-        super()
-        this.subscription = subscription
-    }
-    abstract getCost(): number;
-    abstract getFeatures(): string[];
-}
-class CertificationAddon extends SubscriptionDecorate{
-    getCost(): number {
-        return this.subscription.getCost()+200
-    }
-    getFeatures(): string[] {
-        return [...this.subscription.getFeatures(),"Official Certificate of Completion"]
+class FlightItinerary implements IItinerary{
+    display(): string {
+        return "Displaying flight itinerary..."
     }
 }
-class DoubtSupportAddon extends SubscriptionDecorate{
-    getCost(): number {
-        return this.subscription.getCost() + 300
-    }
-    getFeatures(): string[] {
-        return [...this.subscription.getFeatures(),"24/7 Doubt Support via Chat"]
-    }
-}
-class MentorAccessAddon extends SubscriptionDecorate{
-    getCost(): number {
-        return this.subscription.getCost() + 500
-    }
-    getFeatures(): string[] {
-        return [...this.subscription.getFeatures(),"Weekly 1-on-1 Mentor Sessions"]
-    }
-}
-class DiscountChecker extends SubscriptionDecorate{
-    getCost(): number {
-        const totalCost = this.subscription.getCost()
-        const features = this.subscription.getFeatures()
-        const hasDoubtSupport = features.includes("24/7 Doubt Support via Chat")
-        const hasMentorAccess = features.includes("Weekly 1-on-1 Mentor Sessions")
-
-        if(hasDoubtSupport && hasMentorAccess){
-            return totalCost *0.85
-        }
-        return totalCost
-    }
-
-    getFeatures(): string[] {
-        return this.subscription.getFeatures()
+class FlightInvoice implements IInvoice{
+    generate(): string {
+        return "Generating flight invoice...."
     }
 }
 
-let sub1 = new CertificationAddon(new BasicSubscription())
-console.log("Cost: ", sub1.getCost())
-console.log("Features: ", sub1.getFeatures())
+class HotelBooking implements IBooking{
+    book(): string {
+        return "Hotel booked at Marriott..."
+    }
+}
+class HotelItinerary implements IItinerary{
+    display(): string {
+        return "Displaying Hotel Itinerary..."
+    }
+}
+class HotelInVoice implements IInvoice{
+    generate(): string {
+        return "Generating Hotel invoice...."
+    }
+}
 
-let sub2 = new DiscountChecker(
-    new MentorAccessAddon(
-        new DoubtSupportAddon(
-            new CertificationAddon(
-                new BasicSubscription()
-            )
-        )
-    )
-)
+interface IBookingProviderFactory{
+    createBooking(): IBooking;
+    createItinerary(): IItinerary;
+    createInvoice(): IInvoice;
+}
 
-console.log("Cost with Discount:", sub2.getCost())
-console.log("Features:",sub2.getFeatures())
+class FlightProviderFactory implements IBookingProviderFactory{
+    createBooking(): IBooking {
+        return new FlightBooking();
+    }
+    createItinerary(): IItinerary {
+        return new FlightItinerary();
+    }
+    createInvoice(): IInvoice {
+        return new FlightInvoice();
+    }
+}
+
+class HotelProviderFactory implements IBookingProviderFactory{
+    createBooking(): IBooking {
+        return new HotelBooking();
+    }
+    createItinerary(): IItinerary {
+        return new HotelItinerary();
+    }
+    createInvoice(): IInvoice {
+        return new HotelInVoice()
+    }
+}
+
+function clientCode(factory: IBookingProviderFactory){
+    const booking = factory.createBooking();
+    const itinerary = factory.createItinerary();
+    const invoice = factory.createInvoice();
+
+    console.log(booking.book())
+    console.log(itinerary.display())
+    console.log(invoice.generate())
+}
+
+console.log(" --- Flight Booking ---")
+clientCode(new FlightProviderFactory())
+
+console.log("\n --- Hotel Booking ---")
+clientCode(new HotelProviderFactory())

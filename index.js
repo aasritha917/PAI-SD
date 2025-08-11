@@ -1,116 +1,88 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
+var FlightBooking = /** @class */ (function () {
+    function FlightBooking() {
     }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-var CourseSubscription = /** @class */ (function () {
-    function CourseSubscription() {
-    }
-    return CourseSubscription;
+    FlightBooking.prototype.book = function () {
+        return "Flight booked with Indigo..";
+    };
+    return FlightBooking;
 }());
-var BasicSubscription = /** @class */ (function (_super) {
-    __extends(BasicSubscription, _super);
-    function BasicSubscription() {
-        return _super !== null && _super.apply(this, arguments) || this;
+var FlightItinerary = /** @class */ (function () {
+    function FlightItinerary() {
     }
-    BasicSubscription.prototype.getCost = function () {
-        return 499;
+    FlightItinerary.prototype.display = function () {
+        return "Displaying flight itinerary...";
     };
-    BasicSubscription.prototype.getFeatures = function () {
-        return ["Access to all basic courses"];
-    };
-    return BasicSubscription;
-}(CourseSubscription));
-var SubscriptionDecorate = /** @class */ (function (_super) {
-    __extends(SubscriptionDecorate, _super);
-    function SubscriptionDecorate(subscription) {
-        var _this = _super.call(this) || this;
-        _this.subscription = subscription;
-        return _this;
+    return FlightItinerary;
+}());
+var FlightInvoice = /** @class */ (function () {
+    function FlightInvoice() {
     }
-    return SubscriptionDecorate;
-}(CourseSubscription));
-var CertificationAddon = /** @class */ (function (_super) {
-    __extends(CertificationAddon, _super);
-    function CertificationAddon() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    FlightInvoice.prototype.generate = function () {
+        return "Generating flight invoice....";
+    };
+    return FlightInvoice;
+}());
+var HotelBooking = /** @class */ (function () {
+    function HotelBooking() {
     }
-    CertificationAddon.prototype.getCost = function () {
-        return this.subscription.getCost() + 200;
+    HotelBooking.prototype.book = function () {
+        return "Hotel booked at Marriott...";
     };
-    CertificationAddon.prototype.getFeatures = function () {
-        return __spreadArray(__spreadArray([], this.subscription.getFeatures(), true), ["Official Certificate of Completion"], false);
-    };
-    return CertificationAddon;
-}(SubscriptionDecorate));
-var DoubtSupportAddon = /** @class */ (function (_super) {
-    __extends(DoubtSupportAddon, _super);
-    function DoubtSupportAddon() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    return HotelBooking;
+}());
+var HotelItinerary = /** @class */ (function () {
+    function HotelItinerary() {
     }
-    DoubtSupportAddon.prototype.getCost = function () {
-        return this.subscription.getCost() + 300;
+    HotelItinerary.prototype.display = function () {
+        return "Displaying Hotel Itinerary...";
     };
-    DoubtSupportAddon.prototype.getFeatures = function () {
-        return __spreadArray(__spreadArray([], this.subscription.getFeatures(), true), ["24/7 Doubt Support via Chat"], false);
-    };
-    return DoubtSupportAddon;
-}(SubscriptionDecorate));
-var MentorAccessAddon = /** @class */ (function (_super) {
-    __extends(MentorAccessAddon, _super);
-    function MentorAccessAddon() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    return HotelItinerary;
+}());
+var HotelInVoice = /** @class */ (function () {
+    function HotelInVoice() {
     }
-    MentorAccessAddon.prototype.getCost = function () {
-        return this.subscription.getCost() + 500;
+    HotelInVoice.prototype.generate = function () {
+        return "Generating Hotel invoice....";
     };
-    MentorAccessAddon.prototype.getFeatures = function () {
-        return __spreadArray(__spreadArray([], this.subscription.getFeatures(), true), ["Weekly 1-on-1 Mentor Sessions"], false);
-    };
-    return MentorAccessAddon;
-}(SubscriptionDecorate));
-var DiscountChecker = /** @class */ (function (_super) {
-    __extends(DiscountChecker, _super);
-    function DiscountChecker() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    return HotelInVoice;
+}());
+var FlightProviderFactory = /** @class */ (function () {
+    function FlightProviderFactory() {
     }
-    DiscountChecker.prototype.getCost = function () {
-        var totalCost = this.subscription.getCost();
-        var features = this.subscription.getFeatures();
-        var hasDoubtSupport = features.includes("24/7 Doubt Support via Chat");
-        var hasMentorAccess = features.includes("Weekly 1-on-1 Mentor Sessions");
-        if (hasDoubtSupport && hasMentorAccess) {
-            return totalCost * 0.85;
-        }
-        return totalCost;
+    FlightProviderFactory.prototype.createBooking = function () {
+        return new FlightBooking();
     };
-    DiscountChecker.prototype.getFeatures = function () {
-        return this.subscription.getFeatures();
+    FlightProviderFactory.prototype.createItinerary = function () {
+        return new FlightItinerary();
     };
-    return DiscountChecker;
-}(SubscriptionDecorate));
-var sub1 = new CertificationAddon(new BasicSubscription());
-console.log("Cost: ", sub1.getCost());
-console.log("Features: ", sub1.getFeatures());
-var sub2 = new DiscountChecker(new MentorAccessAddon(new DoubtSupportAddon(new CertificationAddon(new BasicSubscription()))));
-console.log("Cost with Discount:", sub2.getCost());
-console.log("Features:", sub2.getFeatures());
+    FlightProviderFactory.prototype.createInvoice = function () {
+        return new FlightInvoice();
+    };
+    return FlightProviderFactory;
+}());
+var HotelProviderFactory = /** @class */ (function () {
+    function HotelProviderFactory() {
+    }
+    HotelProviderFactory.prototype.createBooking = function () {
+        return new HotelBooking();
+    };
+    HotelProviderFactory.prototype.createItinerary = function () {
+        return new HotelItinerary();
+    };
+    HotelProviderFactory.prototype.createInvoice = function () {
+        return new HotelInVoice();
+    };
+    return HotelProviderFactory;
+}());
+function clientCode(factory) {
+    var booking = factory.createBooking();
+    var itinerary = factory.createItinerary();
+    var invoice = factory.createInvoice();
+    console.log(booking.book());
+    console.log(itinerary.display());
+    console.log(invoice.generate());
+}
+console.log(" --- Flight Booking ---");
+clientCode(new FlightProviderFactory());
+console.log("\n --- Hotel Booking ---");
+clientCode(new HotelProviderFactory());
